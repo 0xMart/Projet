@@ -23,13 +23,27 @@
         <a class="nav-link" href="#">home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/user">User</a>
+        </li>
+       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">User</a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="/listeUser">liste</a>
+          <a class="dropdown-item" href="/user">user</a>
+          <a class="dropdown-item" href="/authentification">connexion</a>
+        </div>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Mon compte</a>
         <div class="dropdown-menu">
           <a class="dropdown-item" href="/dashboard">Dashboard</a>
           <a class="dropdown-item" href="/deconnexion">Déconnexion</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Document</a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="/listeGed">Document</a>
+          <a class="dropdown-item" href="/uploadGed">Upload</a>
         </div>
       </li>
        <li class="nav-item dropdown">
