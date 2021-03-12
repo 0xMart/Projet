@@ -25,7 +25,7 @@ class Genre
     private $type;
 
     /**
-     * @ORM\OneToMany(targetEntity=Document::class, mappedBy="typeld")
+     * @ORM\OneToMany(targetEntity=Document::class, mappedBy="typeId")
      */
     private $documents;
 
@@ -63,7 +63,7 @@ class Genre
     {
         if (!$this->documents->contains($document)) {
             $this->documents[] = $document;
-            $document->setTypeld($this);
+            $document->setTypeId($this);
         }
 
         return $this;
@@ -73,8 +73,8 @@ class Genre
     {
         if ($this->documents->removeElement($document)) {
             // set the owning side to null (unless already changed)
-            if ($document->getTypeld() === $this) {
-                $document->setTypeld(null);
+            if ($document->getTypeId() === $this) {
+                $document->setTypeId(null);
             }
         }
 

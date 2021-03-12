@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DocumentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,12 +38,22 @@ class Document
      * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="documents")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $typeld;
+    private $typeId;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Acces::class, mappedBy="documentId")
+     */
+    private $acces;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $nom;
+
+    public function __construct()
+    {
+        $this->acces = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -84,14 +96,44 @@ class Document
         return $this;
     }
 
-    public function getTypeld(): ?Genre
+    public function getTypeId(): ?Genre
     {
-        return $this->typeld;
+        return $this->typeId;
     }
 
-    public function setTypeld(?Genre $typeld): self
+    public function setTypeId(?Genre $typeId): self
     {
-        $this->typeld = $typeld;
+        $this->typeId = $typeId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Acces[]
+     */
+    public function getAcces(): Collection
+    {
+        return $this->acces;
+    }
+
+    public function addAcce(Acces $acce): self
+    {
+        if (!$this->acces->contains($acce)) {
+            $this->acces[] = $acce;
+            $acce->setDocumentId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAcce(Acces $acce): self
+    {
+        if ($this->acces->removeElement($acce)) {
+            // set the owning side to null (unless already changed)
+            if ($acce->getDocumentId() === $this) {
+                $acce->setDocumentId(null);
+            }
+        }
 
         return $this;
     }

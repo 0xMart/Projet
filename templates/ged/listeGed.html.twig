@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des uploads{% endblock %}
+
+{% block body %}
+   <h1>{{ controller_name }}</h1>
+   <table class="table table-hover">
+      <thead>
+         <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Type</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Chemin</th>
+            <th scope="col">Créé le</th>
+            <th scope="col">Actif</th>
+            <th scope="col">Actions</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for item in listeGed %}
+         <tr class="table">
+            <th scope="row">{{ item.id }}</th>
+            <td>{{ item.typeId.type }}</td>
+            <td>{{ item.nom }}</td>
+            <td>{{ item.chemin }}</td>
+            <td>{{ item.createdAt|date('d/m/Y') }}</td>
+            <td>{{ item.actif }}</td>
+            <td>
+               <a href="/deleteGed/{{ item.id }}">
+                  <i class="bi bi-x"></i>
+               </a>
+               <a href="/upload/{{ item.chemin }}">
+            <i class="bi bi-download"></i>
+             </a>
+               <a href="/updateGed/{{ item.id }}">
+                  <i class="bi bi-arrow-repeat"></i>
+               </a>
+               
+            </td>
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+{% endblock %}

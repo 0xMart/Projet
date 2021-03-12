@@ -3,35 +3,42 @@
 {% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
-<style>
+    <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Création d'un nouvel utilisateur</h1>  
-     <h4> {{ controller_name }} </h4>
-</div>
+    </style>
+    <div class="example-wrapper">
+    <h4>Création d'un nouvel utilisateur</h4>
+    </div>
     <form action="/createUser" method="post">
-  <fieldset>
-    <legend>Formulaire de création</legend>
-     <div class="form-group">
-      <label for="exampleInputNom">Nom</label>
-      <input type="text" class="form-control" id="nom" name="nom" aria-describedby="NomHelp" placeholder="Entrer nom">
-    </div>
-    <div class="form-group">
-      <label for="exampleInputPrenom">Prenom</label>
-      <input type="text" class="form-control" id="prenom" name="prenom" aria-describedby="PrenomHelp" placeholder="Entrer Prenom">
-    </div>
-    <div class="form-group">
-      <label for="exampleInputCode">Code</label>
-      <input type="text" class="form-control" id="code" name="code" aria-describedby="CodeHelp" placeholder="Entrer Code">
-    </div>
-    <div class="form-group">
-      <label for="exampleInputSalt">Salt</label>
-      <input type="text" class="form-control" id="salt" name="salt" aria-describedby="SaltHelp" placeholder="Entrer Salt">
-    </div>
-    </form>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <fieldset>
+        <legend>Formulaire de création</legend>
+        {{ controller_name }} 
+        <div class="form-group row">
+            <label for="staticNom" class="col-sm-2 col-form-label">Nom</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="staticNom" name="nom">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="staticPrenom" class="col-sm-2 col-form-label">Prénom</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="staticPrenom" name="prenom">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="staticCode" class="col-sm-2 col-form-label">Code</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="staticPrenom" name="code">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="staticSalt" class="col-sm-2 col-form-label">Salt</label></label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="staticSalt" name="salt">
+            </div>
+        </div>
     </fieldset>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 {% endblock %}

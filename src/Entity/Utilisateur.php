@@ -40,7 +40,7 @@ class Utilisateur
     private $salt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Acces::class, mappedBy="utilisateurld")
+     * @ORM\OneToMany(targetEntity=Acces::class, mappedBy="utilisateurId")
      */
     private $acces;
 
@@ -114,7 +114,7 @@ class Utilisateur
     {
         if (!$this->acces->contains($acce)) {
             $this->acces[] = $acce;
-            $acce->setUtilisateurld($this);
+            $acce->setUtilisateurId($this);
         }
 
         return $this;
@@ -124,8 +124,8 @@ class Utilisateur
     {
         if ($this->acces->removeElement($acce)) {
             // set the owning side to null (unless already changed)
-            if ($acce->getUtilisateurld() === $this) {
-                $acce->setUtilisateurld(null);
+            if ($acce->getUtilisateurId() === $this) {
+                $acce->setUtilisateurId(null);
             }
         }
 

@@ -5,8 +5,8 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Document;
 use App\Entity\Genre;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -21,49 +21,128 @@ class GedController extends AbstractController
      */
     public function uploadGed(Request $request, EntityManagerInterface $manager): Response
     {
-        //Requête pour récupérer toute la table genre
         $listeGenre = $manager->getRepository(Genre::class)->findAll();
         return $this->render('ged/uploadGed.html.twig', [
-            'controller_name' => "Upload d'un Document",
+            'controller_name' => "Upload d'un document",
             'listeGenre' => $listeGenre,
         ]);
     }
+
     /**
      * @Route("/insertGed", name="insertGed")
      */
     public function insertGed(Request $request, EntityManagerInterface $manager): Response
     {
-        
-        //création d'un nouveau document
+        //Création d'un nouveau document
         $Document = new Document();
         //Récupération et transfert du fichier
         $brochureFile = $request->files->get("fichier");
         if ($brochureFile){
-            $newFilename = uniqid('', true) . "." . $brochureFile->getClientOriginalExtension();
-            $pathImage = "public/upload/";
+            $newFilename = uniqid('', true) . "." .
+            $brochureFile->getClientOriginalExtension();
             $brochureFile->move($this->getParameter('upload'), $newFilename);
-            
-
-
-            //insertion du document dans la base.
-            $Document->setActif($request->request->get('choix'));
+            //Insertion du document dans une base
+            if($request->request->get('choix') == NULL){
+                $actif = -1;
+            } else{
+                $actif=  1;
+            } 
+            $Document->setActif($actif);
             $Document->setNom($request->request->get('nom'));
-            $Document->setTypeld($manager->getRepository(Genre::class)->findOneById($request->request->get('genre')));
-            $Document->setCreatedAt(new \Datetime);    
-            $Document->setChemin($newFilename);    
-            
+            $Document->setTypeId($manager->getRepository(Genre::class)->findOneById($request->request->get('genre')));
+            $Document->setCreatedAt(new \Datetime);
+            $Document->setChemin($newFilename);
+    
             $manager->persist($Document);
             $manager->flush();
         }
-        
-        
-        
-        
-        //Requête pour récupérer toute la table genre
+
         $listeGenre = $manager->getRepository(Genre::class)->findAll();
         return $this->render('ged/uploadGed.html.twig', [
-            'controller_name' => "Upload d'un Document",
+            'controller_name' => "Upload d'un document",
             'listeGenre' => $listeGenre,
         ]);
+    }
+
+    /**    
+     * @Route("/listeGed", name="listeGed")
+     */
+    public function listeGed(Request $request, EntityManagerInterface $manager): Response
+    {
+		//Requête pour récupérer toute la table Document
+		$listeGed = $manager->getRepository(Document::class)->findAll();
+        
+        return $this->render('ged/listeGed.html.twig', [
+            'controller_name' => 'Liste des documents',
+            'listeGed' => $listeGed,
+        ]);
+    }
+
+    /**    
+     * @Route("/deleteGed/{id}", name="deleteGed")
+     */
+    public function deleteGed(Request $request, EntityManagerInterface $manager, Document $id): Response
+    {
+		//Suppression de l'objet avec l'id passé en paramètre
+		$manager->remove($id);
+        $manager->flush();
+
+        return $this->redirectToRoute('listeGed');
+    }
+
+    /**    
+     * @Route("/updateGed/{id}", name="updateGed")
+     */
+    public function updateGed(Request $request, EntityManagerInterface $manager, Document $id): Response
+    {
+        $sess = $request->getSession();
+        //Créer des variables de ssions
+        $sess->set("idGedModif", $id->getId());
+
+        return $this->render('ged/updateGed.html.twig', [
+            'controller_name' => "Mise à jour d'un genre",
+            'ged' => $id,
+        ]);
+    }
+
+    /**    
+     * @Route("/updateGedBdd", name="updateGedBdd")
+     */
+    public function updateGedBdd(Request $request, EntityManagerInterface $manager): Response
+    {
+        $sess = $request->getSession();
+        //Créer des variables de session
+        $id = $sess->get("idGedModif");
+        $ged = $manager->getRepository(Document::class)->findOneById($id);
+        if(!empty($request->request->get('chemin')))
+            $ged->setChemin($request->request->get('chemin'));
+        if(!empty($request->request->get('actif')))
+            $ged->setActif($request->request->get('actif'));
+        if(!empty($request->request->get('nom')))
+            $ged->setNom($request->request->get('nom'));
+        $manager->persist($ged);
+        $manager->flush();
+
+        return $this->redirectToRoute('listeGed');
+    }
+    public function deleteDocument(Request $request, EntityManagerInterface $manager, Document $id): Response
+    {
+        $sess = $request->getSession();
+        if($sess->get("idUtilisateur")){
+            
+        //suppression physique du document :
+        if(unlink("upload/".$id->getChemin())){
+        //suppression du lien dans la base de données
+            $manager->remove($id);
+            $manager->flush();
+        }
+        return $this->redirectToRoute('listeDocument');
+        }else{
+            $this->addFlash(
+                'true',
+                'Le document à été supprimé'
+                );
+            return $this->redirectToRoute('authentification');    
+        }
     }
 }
