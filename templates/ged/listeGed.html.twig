@@ -1,8 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des uploads{% endblock %}
-
 {% block body %}
+{% for message in app.flashes('true') %}
+<div class="flash-notice alert alert-dismissible alert-warning">
+{{ message }}
+</div>
+{% endfor %}
    <h1>{{ controller_name }}</h1>
    <table class="table table-hover">
       <thead>
